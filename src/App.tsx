@@ -3,7 +3,7 @@ import type { KeyboardEvent, FormEvent } from "react";
 import "./App.css";
 import { io, Socket } from "socket.io-client";
 import type { ChatMessage, User } from "./types";
-import { SOCKET_URL, SOCKET_PATH } from "./utils/constants";
+import { SOCKET_URL, SOCKET_PATH, CHAT_ROOM } from "./utils/constants";
 import { encryptPassword, decryptPassword } from "./utils/crypto";
 import { createBlipPlayer } from "./utils/audio";
 
@@ -64,7 +64,7 @@ export default function App() {
     socket.on("connect", () => setConnected(true));
     socket.on("disconnect", () => setConnected(false));
 
-    socket.on("chat_room", (data: ChatMessage | string) => {
+    socket.on(CHAT_ROOM, (data: ChatMessage | string) => {
       let parsed: ChatMessage;
       if (typeof data === "string") {
         try {
@@ -108,7 +108,7 @@ export default function App() {
       message: currentMessage,
     };
 
-    socket.emit("chat_room", message);
+    socket.emit(CHAT_ROOM, message);
     setMessages((prev) => [...prev, message]);
     setCurrentMessage("");
   };
